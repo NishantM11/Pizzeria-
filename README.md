@@ -12,5 +12,5 @@ Pizzeria is a fully responsive and interactive web application built using HTML,
 - **Order Summary:** Review your order before checkout.
 - **Modern Aesthetics:** Clean, modern layout with attractive color schemes and fonts.
 
-Demo
-**
+## Demo
+*https://nishantm11.github.io/Pizzeria-/*
