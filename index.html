@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nishant's Pizzeria - Fresh & Delicious Pizza Delivery</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar__content">
+                <div class="navbar__brand">
+                    <h2>🍕 Nishant's Pizzeria</h2>
+                </div>
+                
+                <div class="navbar__search">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search pizzas, ingredients..." 
+                        class="search-input"
+                    >
+                </div>
+                
+                <div class="navbar__actions">
+                    <button class="btn btn--secondary btn--sm" id="loginBtn">Login</button>
+                    <button class="cart-btn" id="cartBtn">
+                        🛒 Cart
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero__content">
+                <h1>Fresh Pizza Delivered Hot & Fast</h1>
+                <p>Over 50 delicious varieties made with fresh ingredients. Order now and get it delivered in 30 minutes or less!</p>
+                <button class="btn btn--primary btn--lg" onclick="scrollToPizzas()">Order Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="filters-section" id="filtersSection">
+        <div class="container">
+            <div class="filters">
+                <div class="filters__header">
+                    <h3>Find Your Perfect Pizza</h3>
+                    <button class="btn btn--outline btn--sm" id="clearFiltersBtn">Clear All Filters</button>
+                </div>
+                
+                <div class="filters__content">
+                    <div class="filter-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-control" id="categoryFilter">
+                            <option value="All">All Categories</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="form-label">Dietary</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="vegetarian" class="dietary-filter">
+                                Vegetarian
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="vegan" class="dietary-filter">
+                                Vegan
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="gluten-free" class="dietary-filter">
+                                Gluten-Free
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="form-label">Price Range</label>
+                        <div class="price-range">
+                            <input type="range" id="priceRange" min="10" max="40" value="40" class="price-slider">
+                            <div class="price-display">Up to $<span id="priceValue">40</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="form-label">Spice Level</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="spiceLevel" value="all" checked>
+                                All
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="spiceLevel" value="mild">
+                                Mild
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="spiceLevel" value="medium">
+                                Medium
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="spiceLevel" value="hot">
+                                Hot
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="form-label">Sort By</label>
+                        <select class="form-control" id="sortFilter">
+                            <option value="popularity">Most Popular</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="prep-time">Preparation Time</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pizza Grid -->
+    <section class="pizza-section" id="pizzaSection">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Delicious Pizzas</h2>
+                <div class="results-info">
+                    <span id="resultsCount">Loading...</span>
+                </div>
+            </div>
+            
+            <div class="pizza-grid" id="pizzaGrid">
+                <!-- Pizza cards will be dynamically inserted here -->
+            </div>
+            
+            <div class="loading" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>Loading delicious pizzas...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal__backdrop" onclick="closeCart()"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3>Your Cart</h3>
+                <button class="modal__close" onclick="closeCart()">×</button>
+            </div>
+            
+            <div class="modal__body">
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be inserted here -->
+                </div>
+                
+                <div class="cart-empty" id="cartEmpty" style="display: none;">
+                    <p>Your cart is empty</p>
+                    <button class="btn btn--secondary" onclick="closeCart()">Continue Shopping</button>
+                </div>
+            </div>
+            
+            <div class="modal__footer" id="cartFooter">
+                <div class="cart-total">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span id="cartSubtotal">$0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tax (8.5%):</span>
+                        <span id="cartTax">$0.00</span>
+                    </div>
+                    <div class="total-row total-final">
+                        <span>Total:</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                </div>
+                <button class="btn btn--primary btn--full-width" onclick="startCheckout()">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pizza Detail Modal -->
+    <div class="modal" id="pizzaModal">
+        <div class="modal__backdrop" onclick="closePizzaModal()"></div>
+        <div class="modal__content modal__content--large">
+            <div class="modal__header">
+                <h3 id="modalPizzaName">Pizza Name</h3>
+                <button class="modal__close" onclick="closePizzaModal()">×</button>
+            </div>
+            
+            <div class="modal__body">
+                <div class="pizza-detail">
+                    <div class="pizza-detail__image">
+                        <img id="modalPizzaImage" src="" alt="Pizza" />
+                    </div>
+                    <div class="pizza-detail__info">
+                        <p id="modalPizzaDescription" class="pizza-description"></p>
+                        
+                        <div class="ingredients">
+                            <h4>Ingredients:</h4>
+                            <div id="modalPizzaIngredients" class="ingredients-list"></div>
+                        </div>
+                        
+                        <div class="pizza-options">
+                            <div class="size-selection">
+                                <h4>Size:</h4>
+                                <div class="size-options" id="modalSizeOptions">
+                                    <!-- Size options will be inserted here -->
+                                </div>
+                            </div>
+                            
+                            <div class="quantity-selection">
+                                <h4>Quantity:</h4>
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                                    <span class="quantity-display" id="modalQuantity">1</span>
+                                    <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pizza-meta">
+                            <div class="prep-time">
+                                <span>🕒 <span id="modalPrepTime">15</span> min prep</span>
+                            </div>
+                            <div class="dietary-tags" id="modalDietaryTags">
+                                <!-- Dietary tags will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <div class="add-to-cart-section">
+                            <div class="price-display">
+                                <span class="price" id="modalPrice">$16.99</span>
+                            </div>
+                            <button class="btn btn--primary btn--lg" onclick="addToCartFromModal()">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content modal__content--large">
+            <div class="modal__header">
+                <h3>Checkout</h3>
+                <button class="modal__close" onclick="closeCheckout()">×</button>
+            </div>
+            
+            <div class="modal__body">
+                <div class="checkout-progress">
+                    <div class="progress-step active" data-step="1">Cart Review</div>
+                    <div class="progress-step" data-step="2">Your Info</div>
+                    <div class="progress-step" data-step="3">Delivery</div>
+                    <div class="progress-step" data-step="4">Payment</div>
+                    <div class="progress-step" data-step="5">Confirmation</div>
+                </div>
+                
+                <div class="checkout-content" id="checkoutContent">
+                    <!-- Checkout steps will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer">
+        <!-- Toast notifications will be inserted here -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
